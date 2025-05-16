@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talkie Town Adventure - Speech Therapy for Kids</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #E3F2FD;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #FF5722;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+        
+        .town-map {
+            background-color: #81C784;
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            height: 880px; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .location {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .location:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .location-name {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 80px;
+        }
+        
+        #park {
+            top: 50px;
+            left: 100px;
+            background-color: #AED581;
+            background-image: url('https://via.placeholder.com/100/AED581/000000?text=Park');
+        }
+        
+        #farm {
+            top: 250px;
+            left: 180px;
+            background-color: #FFD54F;
+            background-image: url('https://via.placeholder.com/100/FFD54F/000000?text=Farm');
+        }
+        
+        #zoo {
+            top: 80px;
+            right: 100px;
+            background-color: #4FC3F7;
+            background-image: url('https://via.placeholder.com/100/4FC3F7/000000?text=Zoo');
+        }
+        
+        #school {
+            top: 270px;
+            right: 180px;
+            background-color: #FF8A65;
+            background-image: url('https://via.placeholder.com/100/FF8A65/000000?text=School');
+        }
+        
+        .activity-screen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .back-button {
+            background-color: #FF5722;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .activity-title {
+            font-size: 1.8rem;
+            color: #2196F3;
+            margin: 0;
+        }
+        
+        .activity-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1; 
+            justify-content: center; 
+        }
+        
+        .character {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #BBDEFB;
+            margin-bottom: 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        
+        .speech-target {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 15px; 
+            color: #673AB7;
+            font-weight: bold;
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .action-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        
+        .action-button:hover {
+            transform: scale(1.05);
+            background-color: #388E3C;
+        }
+        
+        .stars-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px; 
+        }
+        
+        .star {
+            font-size: 2.5rem;
+            color: #BDBDBD;
+        }
+        
+        .star.active {
+            color: #FFC107;
+        }
+        
+        .progress-container {
+            width: 80%; 
+            height: 20px;
+            background-color: #E0E0E0;
+            border-radius: 10px;
+            margin-top: 15px; 
+            margin-bottom: 15px; 
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .feedback {
+            font-size: 1.5rem;
+            margin-top: 15px;
+            text-align: center;
+            height: 30px; 
+            color: #673AB7; /* Default color for feedback */
+        }
+        
+        .reward-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            opacity: 0;
+            z-index: 20; 
+        }
+        
+        @keyframes rewardPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+        
+        .listening-status-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+        .listening-status {
+            font-size: 1rem;
+            color: #5D4037;
+            margin-bottom: 10px;
+            min-height: 20px; 
+            text-align: center;
+        }
+
+        .start-listening-button {
+            background-color: #FF5722;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+        .start-listening-button.listening { 
+            background-color: #F44336; 
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse { 
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .instructions {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 0; 
+            color: #5D4037;
+        }
+        
+        .help-section {
+            background-color: #FFF9C4;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: auto; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%; 
+            max-width: 600px; 
+            box-sizing: border-box;
+        }
+
+        .help-title {
+            font-size: 1.3rem;
+            color: #FF5722;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .help-content {
+            font-size: 1rem;
+            color: #5D4037;
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000; 
+            display: none; 
+            overflow: hidden; 
+        }
+        
+        .confetti {
+            position: absolute; 
+            width: 10px;
+            height: 10px;
+            opacity: 1; 
+            will-change: transform, opacity; 
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(120vh) rotate(720deg); 
+                opacity: 0;
+            }
+        }
+        
+        .status-message {
+            background-color: #BBDEFB; 
+            color: #0D47A1;
+            padding: 10px 15px; 
+            border-radius: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px; 
+            font-size: 1rem;
+            text-align: center;
+            display: none; 
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .status-message.success {
+            background-color: #C8E6C9; 
+            color: #2E7D32;
+        }
+        .status-message.warning {
+            background-color: #FFECB3; 
+            color: #FF6F00;
+        }
+        .status-message.error {
+            background-color: #FFCDD2; 
+            color: #C62828;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); 
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            z-index: 999; 
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%; 
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-title {
+            color: #FF5722;
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 15px; 
+        }
+        
+        .modal-text {
+            color: #5D4037;
+            margin-bottom: 25px; 
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .permission-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 12px 25px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background-color 0.2s;
+            margin: 10px;
+        }
+        
+        .permission-button:hover {
+            background-color: #388E3C;
+        }
+        
+        .skip-button {
+            background-color: #9E9E9E;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+        
+        .skip-button:hover {
+            background-color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Talkie Town Adventure</div>
+            <p>Let's practice our speech sounds with fun activities!</p>
+            <div class="status-message" id="statusMessage"></div>
+        </div>
+        
+        <div class="town-map" id="townMap">
+            <div class="location" id="park" onclick="openActivity('park')">
+                <div class="location-name">Park</div>
+            </div>
+            <div class="location" id="farm" onclick="openActivity('farm')">
+                <div class="location-name">Farm</div>
+            </div>
+            <div class="location" id="zoo" onclick="openActivity('zoo')">
+                <div class="location-name">Zoo</div>
+            </div>
+            <div class="location" id="school" onclick="openActivity('school')">
+                <div class="location-name">School</div>
+            </div>
+            
+            <div class="activity-screen" id="parkActivity">
+                <div class="activity-header">
+                    <h2 class="activity-title">Park Playtime</h2>
+                    <button class="back-button" onclick="closeActivity('park')">←</button>
+                </div>
+                <div class="activity-content">
+                    <div class="character">🏞️</div>
+                    <div class="speech-target" id="parkTarget">Say "Ball"</div>
+                    <div class="listening-status-container">
+                        <div class="listening-status" id="parkListeningStatus">Microphone inactive.</div>
+                        <button class="start-listening-button" id="parkStartListeningButton" onclick="handleStartStopListening('park')">Start Listening</button>
+                    </div>
+                    <div class="instructions">Speak the word clearly when listening is active.</div>
+                    <div class="feedback" id="parkFeedback"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="parkProgressBar"></div>
+                    </div>
+                    <div class="stars-container" id="parkStars">
+                        <div class="star">⭐</div> <div class="star">⭐</div> <div class="star">⭐</div>
+                    </div>
+                    <div class="buttons-container">
+                        <button class="action-button" onclick="practiceAgain('park')">Try Again</button>
+                        <button class="action-button" onclick="nextWord('park')">Next Word</button>
+                    </div>
+                    <div class="help-section">
+                        <h3 class="help-title">Parent/Teacher Help</h3>
+                        <p class="help-content">This activity focuses on "B" sounds. Help your child by pointing to your lips and showing how they come together to make the "B" sound.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-screen" id="farmActivity">
+                <div class="activity-header">
+                    <h2 class="activity-title">Fun at the Farm</h2>
+                    <button class="back-button" onclick="closeActivity('farm')">←</button>
+                </div>
+                <div class="activity-content">
+                    <div class="character">🐮</div>
+                    <div class="speech-target" id="farmTarget">Say "Pig"</div>
+                    <div class="listening-status-container">
+                        <div class="listening-status" id="farmListeningStatus">Microphone inactive.</div>
+                        <button class="start-listening-button" id="farmStartListeningButton" onclick="handleStartStopListening('farm')">Start Listening</button>
+                    </div>
+                    <div class="instructions">Speak the word clearly when listening is active.</div>
+                    <div class="feedback" id="farmFeedback"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="farmProgressBar"></div>
+                    </div>
+                    <div class="stars-container" id="farmStars">
+                        <div class="star">⭐</div> <div class="star">⭐</div> <div class="star">⭐</div>
+                    </div>
+                    <div class="buttons-container">
+                        <button class="action-button" onclick="practiceAgain('farm')">Try Again</button>
+                        <button class="action-button" onclick="nextWord('farm')">Next Word</button>
+                    </div>
+                    <div class="help-section">
+                        <h3 class="help-title">Parent/Teacher Help</h3>
+                        <p class="help-content">This activity focuses on "P" sounds. Show your child how to gently "pop" their lips for the "P" sound.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-screen" id="zooActivity">
+                <div class="activity-header">
+                    <h2 class="activity-title">Zoo Adventure</h2>
+                    <button class="back-button" onclick="closeActivity('zoo')">←</button>
+                </div>
+                <div class="activity-content">
+                    <div class="character">🦁</div>
+                    <div class="speech-target" id="zooTarget">Say "Tiger"</div>
+                    <div class="listening-status-container">
+                        <div class="listening-status" id="zooListeningStatus">Microphone inactive.</div>
+                        <button class="start-listening-button" id="zooStartListeningButton" onclick="handleStartStopListening('zoo')">Start Listening</button>
+                    </div>
+                    <div class="instructions">Speak the word clearly when listening is active.</div>
+                    <div class="feedback" id="zooFeedback"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="zooProgressBar"></div>
+                    </div>
+                    <div class="stars-container" id="zooStars">
+                        <div class="star">⭐</div> <div class="star">⭐</div> <div class="star">⭐</div>
+                    </div>
+                    <div class="buttons-container">
+                        <button class="action-button" onclick="practiceAgain('zoo')">Try Again</button>
+                        <button class="action-button" onclick="nextWord('zoo')">Next Word</button>
+                    </div>
+                    <div class="help-section">
+                        <h3 class="help-title">Parent/Teacher Help</h3>
+                        <p class="help-content">This activity focuses on "T" sounds. Show your child how to place their tongue behind their teeth to make the "T" sound.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-screen" id="schoolActivity">
+                <div class="activity-header">
+                    <h2 class="activity-title">School Time</h2>
+                    <button class="back-button" onclick="closeActivity('school')">←</button>
+                </div>
+                <div class="activity-content">
+                    <div class="character">📚</div>
+                    <div class="speech-target" id="schoolTarget">Say "Desk"</div>
+                    <div class="listening-status-container">
+                        <div class="listening-status" id="schoolListeningStatus">Microphone inactive.</div>
+                        <button class="start-listening-button" id="schoolStartListeningButton" onclick="handleStartStopListening('school')">Start Listening</button>
+                    </div>
+                    <div class="instructions">Speak the word clearly when listening is active.</div>
+                    <div class="feedback" id="schoolFeedback"></div>
+                     <div class="progress-container">
+                        <div class="progress-bar" id="schoolProgressBar"></div>
+                    </div>
+                    <div class="stars-container" id="schoolStars">
+                        <div class="star">⭐</div> <div class="star">⭐</div> <div class="star">⭐</div>
+                    </div>
+                    <div class="buttons-container">
+                        <button class="action-button" onclick="practiceAgain('school')">Try Again</button>
+                        <button class="action-button" onclick="nextWord('school')">Next Word</button>
+                    </div>
+                    <div class="help-section">
+                        <h3 class="help-title">Parent/Teacher Help</h3>
+                        <p class="help-content">This activity focuses on "D" sounds. Help your child feel how their tongue taps behind their teeth for the "D" sound.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="reward-animation" id="rewardAnimation">🎉</div>
+        </div>
+        
+        <div class="help-section" style="margin-top: 30px; width: 100%; max-width: none;">
+            <h3 class="help-title">For Parents & Speech Therapists</h3>
+            <p class="help-content">
+                This interactive game helps children practice key speech sounds in a fun, engaging way. 
+                Each location focuses on different speech sounds:
+                <br>- Park: B sounds (ball, bat, boy, bus, bubble)
+                <br>- Farm: P sounds (pig, pony, pet, pen, pop)
+                <br>- Zoo: T sounds (tiger, turtle, toad, tail, tent)
+                <br>- School: D sounds (desk, door, dog, duck, doll)
+                <br><br>
+                Sit with your child and provide encouragement. For the best experience, please enable microphone access when prompted. Once in an activity, click "Start Listening". If microphone access is skipped or unavailable, the game will simulate responses.
+            </p>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="permissionModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Let's Get Ready to Talk!</h2>
+            <p class="modal-text">
+                To help with your speech practice, we need permission to use your microphone. 
+                This helps us hear when you say the words correctly!
+            </p>
+            <button id="permissionButton" class="permission-button">Enable Microphone</button>
+            <br>
+            <button id="skipButton" class="skip-button">Practice Without Microphone</button>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebrationContainer"></div>
+    
+    <script>
+        // Activity data
+        const activities = {
+            park: {
+                words: ["Ball", "Bat", "Boy", "Bus", "Bubble"],
+                currentWordIndex: 0,
+                stars: 0,
+                character: "🏞️",
+                soundFocus: "B"
+            },
+            farm: {
+                words: ["Pig", "Pony", "Pet", "Pen", "Pop"],
+                currentWordIndex: 0,
+                stars: 0,
+                character: "🐮",
+                soundFocus: "P"
+            },
+            zoo: {
+                words: ["Tiger", "Turtle", "Toad", "Tail", "Tent"],
+                currentWordIndex: 0,
+                stars: 0,
+                character: "🦁",
+                soundFocus: "T"
+            },
+            school: {
+                words: ["Desk", "Door", "Dog", "Duck", "Doll"],
+                currentWordIndex: 0,
+                stars: 0,
+                character: "📚",
+                soundFocus: "D"
+            }
+        };
+
+        let micPermissionGranted = false;
+        let micUsageSkipped = false;
+        let currentListeningLocationId = null; 
+        
+        const permissionModal = document.getElementById('permissionModal');
+        const statusMessage = document.getElementById('statusMessage');
+        const celebrationContainer = document.getElementById('celebrationContainer');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
+        
+        let recognitionSupported = true;
+        if (!SpeechRecognition) {
+            recognitionSupported = false;
+            console.warn("[WARN] Speech recognition not supported in this browser. Using simulation for speech-dependent features.");
+        }
+        
+        const recognitionObjects = {}; 
+
+        window.addEventListener('load', () => {
+            console.log("[INFO] Page loaded. Initializing.");
+            statusMessage.style.display = 'none'; 
+
+            if (recognitionSupported) {
+                if (navigator.permissions && typeof navigator.permissions.query === 'function') {
+                    navigator.permissions.query({ name: 'microphone' }).then(permissionStatus => {
+                        console.log("[INFO] Initial microphone permission state:", permissionStatus.state);
+                        if (permissionStatus.state === 'granted') {
+                            micPermissionGranted = true;
+                            updateStatusMessage('Microphone access is enabled.', 'success');
+                        } else if (permissionStatus.state === 'prompt') {
+                             if (!micUsageSkipped) showPermissionModal();
+                        } else if (permissionStatus.state === 'denied') {
+                            micUsageSkipped = true; 
+                            updateStatusMessage('Microphone access was denied by your browser settings. Speech interaction will be simulated.', 'error');
+                        }
+                        
+                        permissionStatus.onchange = () => {
+                            console.log("[INFO] Microphone permission state changed to:", permissionStatus.state);
+                            if (permissionStatus.state === 'granted') {
+                                micPermissionGranted = true;
+                                micUsageSkipped = false;
+                                updateStatusMessage('Microphone access enabled.', 'success');
+                                hidePermissionModal(); 
+                            } else if (permissionStatus.state === 'denied') {
+                                micPermissionGranted = false;
+                                micUsageSkipped = true; 
+                                updateStatusMessage('Microphone access was denied by your browser. Speech interaction will be simulated.', 'error');
+                                hidePermissionModal(); 
+                                if (currentListeningLocationId && recognitionObjects[currentListeningLocationId]?.isListening) {
+                                    console.log(`[INFO] Stopping listening for ${currentListeningLocationId} due to permission denial.`);
+                                    stopContinuousListening(currentListeningLocationId);
+                                }
+                            } else if (permissionStatus.state === 'prompt') {
+                                micPermissionGranted = false;
+                                console.log("[INFO] Mic permission reverted to prompt. User will be asked if they try to use mic features.");
+                            }
+                        };
+                    }).catch(error => {
+                        console.warn("[WARN] Permissions API query error or not supported:", error);
+                        if (!micUsageSkipped) showPermissionModal(); 
+                    });
+                } else {
+                    console.warn("[WARN] Permissions API not supported. Showing modal directly if not skipped.");
+                    if (!micUsageSkipped) showPermissionModal(); 
+                }
+            } else {
+                micUsageSkipped = true; 
+                updateStatusMessage('Speech recognition is not supported by your browser. Speech interaction will be simulated.', 'warning');
+            }
+        });
+
+        function updateStatusMessage(message, type) {
+            if (!statusMessage) return;
+            statusMessage.textContent = message;
+            statusMessage.className = 'status-message'; 
+            if (type) {
+                statusMessage.classList.add(type);
+            }
+            statusMessage.style.display = 'block';
+        }
+
+        function showPermissionModal() {
+            if (!micPermissionGranted && !micUsageSkipped && permissionModal) {
+                console.log("[INFO] Showing permission modal.");
+                permissionModal.style.display = 'flex';
+            }
+        }
+
+        function hidePermissionModal() {
+            if (permissionModal) {
+                console.log("[INFO] Hiding permission modal.");
+                permissionModal.style.display = 'none';
+            }
+        }
+
+        if (permissionModal) {
+            document.getElementById('permissionButton').addEventListener('click', async () => {
+                console.log("[ACTION] 'Enable Microphone' button clicked.");
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    console.error("[ERROR] getUserMedia not supported.");
+                    updateStatusMessage("Your browser doesn't support microphone access. Simulation will be used.", 'error');
+                    micUsageSkipped = true;
+                    hidePermissionModal();
+                    return;
+                }
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    stream.getTracks().forEach(track => track.stop()); 
+                    micPermissionGranted = true;
+                    micUsageSkipped = false;
+                    hidePermissionModal();
+                    updateStatusMessage('Microphone enabled successfully! You can start playing.', 'success');
+                    console.log("[INFO] Microphone permission granted by user.");
+                } catch (err) {
+                    console.error("[ERROR] Error accessing microphone via getUserMedia:", err.name, err.message);
+                    hidePermissionModal();
+                    micUsageSkipped = true; 
+                    let userMessage = "Could not access microphone. Speech interaction will be simulated.";
+                    if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") { // Added PermissionDeniedError for Firefox
+                        userMessage = "Microphone permission was denied. Speech interaction will be simulated. Please check browser/site settings.";
+                    } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") { // Added DevicesNotFoundError
+                         userMessage = "No microphone found. Please ensure one is connected. Speech interaction will be simulated.";
+                    }
+                    updateStatusMessage(userMessage, 'error');
+                }
+            });
+
+            document.getElementById('skipButton').addEventListener('click', () => {
+                console.log("[ACTION] 'Skip Practice Without Microphone' button clicked.");
+                hidePermissionModal();
+                micUsageSkipped = true;
+                updateStatusMessage('Microphone usage skipped. Speech interaction will be simulated.', 'warning');
+            });
+        }
+
+        function openActivity(locationId) {
+            console.log(`[INFO] Opening activity: ${locationId}`);
+            if (currentListeningLocationId && recognitionObjects[currentListeningLocationId]?.isListening) {
+                console.log(`[INFO] Stopping listening for previous activity: ${currentListeningLocationId}`);
+                stopContinuousListening(currentListeningLocationId);
+            }
+            currentListeningLocationId = locationId; 
+
+            const activityElement = document.getElementById(locationId + 'Activity');
+            if (activityElement) activityElement.style.display = 'flex'; 
+            
+            const activity = activities[locationId];
+            activity.currentWordIndex = 0; 
+            activity.stars = 0;
+            updateWordDisplay(locationId);
+            updateStars(locationId);
+            updateActivityProgress(locationId);
+            document.getElementById(locationId + 'Feedback').textContent = '';
+
+            const listenButton = document.getElementById(locationId + 'StartListeningButton');
+            const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+            if(listenButton) {
+                listenButton.textContent = 'Start Listening';
+                listenButton.classList.remove('listening');
+            }
+            if(listenStatus) listenStatus.textContent = 'Microphone inactive.';
+            if(recognitionObjects[locationId]) recognitionObjects[locationId].isListening = false;
+        }
+        
+        function closeActivity(locationId) {
+            console.log(`[INFO] Closing activity: ${locationId}`);
+            if (recognitionObjects[locationId]?.isListening) {
+                console.log(`[INFO] Stopping listening for ${locationId} due to activity close.`);
+                stopContinuousListening(locationId);
+            }
+            if (currentListeningLocationId === locationId) {
+                currentListeningLocationId = null;
+            }
+
+            const activityElement = document.getElementById(locationId + 'Activity');
+            if (activityElement) activityElement.style.display = 'none';
+        }
+        
+        function updateWordDisplay(locationId) {
+            const activity = activities[locationId];
+            const wordElement = document.getElementById(locationId + 'Target');
+            if (wordElement && activity.words.length > 0) {
+                 wordElement.textContent = `Say "${activity.words[activity.currentWordIndex]}"`;
+            } else if (wordElement) {
+                wordElement.textContent = `Error: No words loaded for ${locationId}`;
+                 console.error(`[ERROR] No words loaded for activity ${locationId} in updateWordDisplay.`);
+            }
+        }
+
+        function handleStartStopListening(locationId) {
+            console.log(`[ACTION] handleStartStopListening called for ${locationId}`);
+            if (!recognitionSupported) {
+                updateStatusMessage("Speech recognition not supported. Using manual interaction.", "warning");
+                const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+                if(listenStatus) listenStatus.textContent = "Manual mode (no mic support).";
+                console.warn("[WARN] Speech recognition not supported, cannot start listening.");
+                return;
+            }
+            if (!micPermissionGranted && !micUsageSkipped) {
+                console.log("[INFO] Microphone permission not granted and not skipped. Showing permission modal.");
+                showPermissionModal();
+                return;
+            }
+            if (micUsageSkipped) {
+                updateStatusMessage("Microphone usage was skipped. Manual interaction mode.", "warning");
+                const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+                if(listenStatus) listenStatus.textContent = "Manual mode (mic skipped).";
+                console.log("[INFO] Microphone usage skipped, cannot start listening.");
+                return;
+            }
+
+            if (recognitionObjects[locationId]?.isListening) {
+                console.log(`[ACTION] Attempting to stop listening for ${locationId}.`);
+                stopContinuousListening(locationId);
+            } else {
+                console.log(`[ACTION] Attempting to start listening for ${locationId}.`);
+                startContinuousListening(locationId);
+            }
+        }
+
+        function startContinuousListening(locationId) {
+            console.log(`[INFO] startContinuousListening called for ${locationId}. Mic permission: ${micPermissionGranted}, Skipped: ${micUsageSkipped}, Supported: ${recognitionSupported}`);
+            if (!micPermissionGranted || micUsageSkipped || !recognitionSupported) {
+                console.warn("[WARN] Pre-conditions not met for starting listening.");
+                const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+                if(listenStatus) listenStatus.textContent = "Mic not available or permission denied.";
+                return;
+            }
+
+            // Ensure only one recognizer is active globally by stopping any other
+            if (currentListeningLocationId && currentListeningLocationId !== locationId && recognitionObjects[currentListeningLocationId]?.isListening) {
+                console.log(`[INFO] Stopping recognizer for other active location: ${currentListeningLocationId}`);
+                stopContinuousListening(currentListeningLocationId);
+            }
+            currentListeningLocationId = locationId; // Set active location
+
+            if (!recognitionObjects[locationId] || !recognitionObjects[locationId].recognizer) {
+                console.log(`[INFO] Creating new SpeechRecognition instance for ${locationId}.`);
+                recognitionObjects[locationId] = { recognizer: new SpeechRecognition(), isListening: false, explicitlyStopped: false };
+            } else {
+                console.log(`[INFO] Reusing existing SpeechRecognition instance for ${locationId}.`);
+            }
+            
+            const instance = recognitionObjects[locationId];
+            const recognition = instance.recognizer;
+            const activity = activities[locationId];
+
+            recognition.continuous = true; 
+            recognition.interimResults = false; 
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1; 
+            
+            if (SpeechGrammarList && activity.words && activity.words.length > 0) {
+                const grammarList = new SpeechGrammarList();
+                const grammar = `#JSGF V1.0; grammar words; public <word> = ${activity.words.map(w => w.toLowerCase().replace(/"/g, '\\"')).join(' | ')} ;`; // Escape quotes if any
+                console.log(`[INFO] Attempting to add grammar for ${locationId}: ${grammar}`);
+                try {
+                    grammarList.addFromString(grammar, 1);
+                    recognition.grammars = grammarList;
+                    console.log(`[INFO] Grammar added successfully for ${locationId}.`);
+                } catch (e) { 
+                    console.warn(`[WARN] Could not add grammar for ${locationId}:`, e.message, "Grammar string:", grammar);
+                    const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+                    if(listenStatus) listenStatus.textContent += " (Grammar issue, accuracy may vary)";
+                }
+            } else {
+                 console.warn(`[WARN] No words for grammar or SpeechGrammarList not supported for ${locationId}.`);
+            }
+
+            recognition.onstart = () => {
+                console.log(`[EVENT] Speech recognition started for ${locationId}.`);
+                instance.isListening = true;
+                instance.explicitlyStopped = false;
+                const listenButton = document.getElementById(locationId + 'StartListeningButton');
+                const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+                if(listenButton) {
+                    listenButton.textContent = 'Stop Listening';
+                    listenButton.classList.add('listening');
+                }
+                if(listenStatus) listenStatus.textContent = 'Listening... Speak now!';
+                document.getElementById(locationId + 'Feedback').textContent = ''; 
+            };
+            
+            recognition.onresult = (event) => {
+                let lastResultIndex = event.results.length - 1;
+                console.log(`[EVENT] onresult for ${locationId}. Results length: ${event.results.length}. Last result isFinal: ${event.results[lastResultIndex].isFinal}`, event.results);
+                
+                if (event.results[lastResultIndex].isFinal) { 
+                    let speechResult = event.results[lastResultIndex][0].transcript.toLowerCase().trim();
+                    console.log(`[RESULT] Final speech recognized for ${locationId}: "${speechResult}" (Confidence: ${event.results[lastResultIndex][0].confidence})`);
+                    
+                    const feedbackElem = document.getElementById(locationId + 'Feedback');
+                    if (feedbackElem) {
+                        feedbackElem.textContent = "Processing..."; 
+                        feedbackElem.style.color = "#757575"; 
+                    }
+
+                    setTimeout(() => {
+                        if (currentListeningLocationId === locationId) { // Ensure still on the same activity
+                            processSpeechResult(locationId, speechResult);
+                        } else {
+                            console.log(`[INFO] Speech result received for ${locationId}, but current activity is ${currentListeningLocationId}. Ignoring.`);
+                        }
+                    }, 50);
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                console.error(`[ERROR] Speech recognition error for ${locationId}:`, event.error, event.message, event);
+                instance.isListening = false;
+                const listenButton = document.getElementById(locationId + 'StartListeningButton');
+                const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+                const feedback = document.getElementById(locationId + 'Feedback');
+
+                if(listenButton) {
+                    listenButton.textContent = 'Start Listening';
+                    listenButton.classList.remove('listening');
+                }
+                
+                let userMessage = "An unknown listening error occurred. Please try again. 🔊";
+                let criticalErrorForSimulation = false;
+
+                switch (event.error) {
+                    case 'no-speech':
+                        userMessage = "I didn't hear anything clearly. Try speaking louder or closer to the mic. Click 'Start Listening' to try again.";
+                        break;
+                    case 'audio-capture':
+                        userMessage = "Microphone problem. Please check if it's connected, not muted, or used by another app. You might need to check browser site settings too. 🛠️";
+                        criticalErrorForSimulation = true;
+                        break;
+                    case 'not-allowed':
+                        userMessage = "Microphone access was blocked or denied. Please enable it in your browser's site settings and then click 'Start Listening' again.";
+                        micPermissionGranted = false; 
+                        micUsageSkipped = true;    
+                        criticalErrorForSimulation = true;
+                        break;
+                    case 'network':
+                        userMessage = "A network connection is needed for speech recognition. Please check your internet. 🌐";
+                        break;
+                    case 'aborted':
+                        userMessage = "Speech input was stopped. If this was unexpected, try 'Start Listening' again. 👍";
+                        break;
+                    case 'service-not-allowed':
+                        userMessage = "Speech recognition service is not allowed (e.g., due to browser/OS policy). Please check your system/browser settings.";
+                        criticalErrorForSimulation = true;
+                        break;
+                    case 'bad-grammar':
+                        userMessage = "There was an issue with the speech grammar. Recognition might be less accurate. Try 'Start Listening' again.";
+                        console.error("[ERROR] Bad grammar detected by service for location:", locationId);
+                        break;
+                    default:
+                        userMessage = `Listening error ('${event.error}'). Please try 'Start Listening' again.`;
+                }
+                
+                if(listenStatus) listenStatus.textContent = userMessage;
+                if(feedback) feedback.textContent = ""; 
+
+                if (criticalErrorForSimulation) {
+                    updateStatusMessage("Problem with microphone access or service. Switched to manual interaction mode for this activity.", "error");
+                    // You might want to visually disable the "Start Listening" button or change its text
+                    if(listenButton) listenButton.disabled = true;
+                }
+            };
+            
+            recognition.onend = () => {
+                console.log(`[EVENT] Recognition ended for ${locationId}. Explicitly stopped: ${instance.explicitlyStopped}. Is Listening flag: ${instance.isListening}. Current activity: ${currentListeningLocationId}`);
+                // isListening might have already been set to false by an error or explicit stop.
+                // This 'onend' is the final confirmation from the browser API.
+                const wasActivelyListening = instance.isListening; // Capture state before resetting
+                instance.isListening = false; 
+
+                if (!instance.explicitlyStopped && currentListeningLocationId === locationId) {
+                    console.log(`[INFO] Recognition for ${locationId} ended unexpectedly.`);
+                    const listenButton = document.getElementById(locationId + 'StartListeningButton');
+                    const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+                    if (listenButton) {
+                        listenButton.textContent = 'Start Listening';
+                        listenButton.classList.remove('listening');
+                    }
+                    if (listenStatus) {
+                        // Avoid overriding a more specific error message if one was just set
+                        if (wasActivelyListening || !listenStatus.textContent.includes("error") && !listenStatus.textContent.includes("Microphone problem") && !listenStatus.textContent.includes("didn't hear")) {
+                             listenStatus.textContent = 'Listening stopped. Click "Start Listening" to try again.';
+                        }
+                    }
+                }
+                // If explicitly stopped, stopContinuousListening already handled UI.
+            };
+            
+            try { 
+                console.log(`[ACTION] Calling recognition.start() for ${locationId}.`);
+                recognition.start(); 
+            } catch (e) {
+                 console.error(`[FATAL] Error trying to call recognition.start() for ${locationId}:`, e);
+                 instance.isListening = false; // Ensure flag is correct
+                 const listenButton = document.getElementById(locationId + 'StartListeningButton');
+                 const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+                 if(listenButton) {
+                    listenButton.textContent = 'Start Listening';
+                    listenButton.classList.remove('listening');
+                    listenButton.disabled = true; // Disable if start itself fails critically
+                 }
+                 if(listenStatus) listenStatus.textContent = "FATAL: Could not start microphone. Please refresh.";
+                 updateStatusMessage("Critical microphone error. Please refresh the page.", "error");
+            }
+        }
+
+        function stopContinuousListening(locationId) {
+            const instance = recognitionObjects[locationId];
+            if (instance && instance.recognizer) { // Check if recognizer exists
+                console.log(`[ACTION] stopContinuousListening called for ${locationId}. Currently listening: ${instance.isListening}`);
+                instance.explicitlyStopped = true; 
+                if (instance.isListening) { // Only call stop if it thinks it's listening
+                    try {
+                        console.log(`[ACTION] Calling recognition.stop() for ${locationId}.`);
+                        instance.recognizer.stop(); // This will trigger onend
+                    } catch (e) {
+                        console.warn(`[WARN] Error trying to stop recognizer for ${locationId} (it might have already stopped):`, e);
+                    }
+                }
+                instance.isListening = false; // Set immediately
+            } else {
+                console.log(`[INFO] stopContinuousListening called for ${locationId}, but no active recognizer instance found or not listening.`);
+            }
+
+            // Reset UI consistently
+            const listenButton = document.getElementById(locationId + 'StartListeningButton');
+            const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+            if(listenButton) {
+                listenButton.textContent = 'Start Listening';
+                listenButton.classList.remove('listening');
+                listenButton.disabled = false; // Re-enable if it was disabled by an error
+            }
+            if(listenStatus) listenStatus.textContent = 'Microphone inactive.';
+            console.log(`[UI] UI reset for ${locationId} after stopping listening.`);
+        }
+        
+        function processSpeechResult(locationId, speechResult) {
+            console.log(`[PROCESS] processSpeechResult for ${locationId}. Heard: "${speechResult}". Target: "${activities[locationId].words[activities[locationId].currentWordIndex]}"`);
+            const feedback = document.getElementById(locationId + 'Feedback');
+            const activity = activities[locationId];
+            const currentWord = activity.words[activity.currentWordIndex].toLowerCase();
+            
+            const isCorrectWord = speechResult.includes(currentWord);
+            // Be careful with startsWithTargetSound if words are very short or share common sounds.
+            const startsWithTargetSound = currentWord.length > 2 && speechResult.startsWith(activity.soundFocus.toLowerCase());
+            
+            if (isCorrectWord) { 
+                feedback.textContent = "Great job! 👏";
+                feedback.style.color = "#4CAF50"; 
+                activity.stars = Math.min(activity.stars + 1, 3);
+                updateStars(locationId);
+                if (activity.stars === 3) {
+                    celebrateSuccess();
+                    setTimeout(() => { nextWord(locationId); }, 1500); 
+                }
+            } else if (startsWithTargetSound && activity.stars < 1 && speechResult.length < currentWord.length + 3) { // Avoid overly long incorrect utterances triggering this
+                 feedback.textContent = "Good start with the '" + activity.soundFocus + "' sound! Try the whole word: \"" + currentWord + "\" 👍";
+                 feedback.style.color = "#2196F3"; 
+                 activity.stars = Math.min(activity.stars + 1, 1); 
+                 updateStars(locationId);
+            }
+            else {
+                feedback.textContent = `Hmm, not quite "${currentWord}". Try again! 😊 You said: "${speechResult}"`;
+                feedback.style.color = "#FF9800"; 
+            }
+        }
+        
+        // This function is now primarily a fallback message provider if micUsageSkipped is true
+        // or if speech recognition is completely unsupported.
+        function simulateSpeechInteraction(locationId, reason) {
+            console.log(`[SIMULATE] Simulating interaction for ${locationId} due to: ${reason}`);
+            const listenStatus = document.getElementById(locationId + 'ListeningStatus');
+            const listenButton = document.getElementById(locationId + 'StartListeningButton');
+            const feedback = document.getElementById(locationId + 'Feedback');
+
+            let message = "Manual interaction mode.";
+            if (reason === "unsupported") message = "Mic input not supported by browser.";
+            else if (reason === "skipped") message = "Mic input skipped by user.";
+            else if (reason === "error") message = "Mic error; manual mode.";
+
+            if (listenStatus) listenStatus.textContent = message;
+            if (listenButton) {
+                listenButton.textContent = "Mic N/A";
+                listenButton.disabled = true;
+            }
+            if (feedback) feedback.textContent = "Use 'Try Again' or 'Next Word' buttons.";
+            updateStatusMessage("Speech input not active. Using manual navigation.", "warning");
+        }
+        
+        function updateStars(locationId) {
+            const starsContainer = document.getElementById(locationId + 'Stars');
+            if (!starsContainer) return;
+            const stars = starsContainer.children;
+            const activity = activities[locationId];
+            
+            for (let i = 0; i < stars.length; i++) {
+                if (i < activity.stars) {
+                    stars[i].classList.add('active');
+                } else {
+                    stars[i].classList.remove('active');
+                }
+            }
+        }
+        
+        function practiceAgain(locationId) {
+            activities[locationId].stars = 0; 
+            updateStars(locationId);
+            document.getElementById(locationId + 'Feedback').textContent = 'Okay, try saying the word again!';
+            updateActivityProgress(locationId); 
+        }
+        
+        function nextWord(locationId) {
+            const activity = activities[locationId];
+            activity.stars = 0; 
+            updateStars(locationId);
+            
+            if (activity.words.length > 0) {
+                activity.currentWordIndex = (activity.currentWordIndex + 1) % activity.words.length;
+            } else {
+                activity.currentWordIndex = 0;
+            }
+            updateWordDisplay(locationId);
+            updateActivityProgress(locationId);
+            document.getElementById(locationId + 'Feedback').textContent = ''; 
+        }
+
+        function updateActivityProgress(locationId) {
+            const activity = activities[locationId];
+            const progressBar = document.getElementById(locationId + 'ProgressBar'); 
+            if (progressBar) {
+                const progressPercentage = activity.words.length > 0 ? ((activity.currentWordIndex) / activity.words.length) * 100 : 0;
+                progressBar.style.width = progressPercentage + '%';
+            }
+        }
+        
+        function celebrateSuccess() {
+            const rewardAnimation = document.getElementById('rewardAnimation');
+            if (rewardAnimation) {
+                rewardAnimation.style.animation = 'none';
+                rewardAnimation.offsetHeight; 
+                rewardAnimation.style.animation = 'rewardPop 1.5s forwards';
+            }
+            shootConfetti();
+        }
+
+        function shootConfetti() {
+            if (!celebrationContainer) return;
+            celebrationContainer.style.display = 'block';
+            celebrationContainer.innerHTML = ''; 
+
+            const colors = ['#FF5722', '#FFC107', '#4CAF50', '#2196F3', '#9C27B0', '#E91E63'];
+            for (let i = 0; i < 100; i++) { 
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = (Math.random() * -80) - 20 + 'px'; 
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const animDuration = Math.random() * 2.5 + 2.5; 
+                const animDelay = Math.random() * 0.5; 
+                confetti.style.animation = `fall ${animDuration}s linear ${animDelay}s forwards`;
+                
+                celebrationContainer.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                    if (celebrationContainer.children.length === 0) {
+                        celebrationContainer.style.display = 'none';
+                    }
+                }, (animDuration + animDelay) * 1000 + 500); 
+            }
+        }
+    </script></body>
+</html>
